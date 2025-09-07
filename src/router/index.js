@@ -1,0 +1,29 @@
+const expres = require('express');
+const { path } = require('../app');
+const router = expres.Router();
+const userRouter = require('./user.router');
+const productRouter = require('./product.router');
+const routers = [
+    {
+        path: '/user',
+        route: userRouter
+    },
+    {
+        path: '/test',
+        route: (req,res) => { console.log("test route") 
+        res.send("test route")
+        }
+    },
+    {
+        path: '/product',
+        route: productRouter
+    },
+]
+
+
+routers.map((route) => {
+    router.use(route.path, route.route)
+})
+
+
+module.exports = router;
