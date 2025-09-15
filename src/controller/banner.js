@@ -1,6 +1,8 @@
+const mongoose = require("mongoose")
 const Banner = require("../model/Banner")
+const deleteImage = require("../utils/deleteImage")
 
-const crateBanner = async (req, res) => {
+const crateBanner = async (req, res,next) => {
     try {
 
         const banner = await Banner.create(req.body)
@@ -11,6 +13,11 @@ const crateBanner = async (req, res) => {
 
     }
     catch (err) {
+        if (req.file) {
+
+            deleteImage(req.body.image)
+        }
+
         // delete image if error occurs
         next(err)
 
@@ -31,5 +38,36 @@ const getBnners = async (req, res) => {
 }
 
 
+const deleteBanner = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        let bannerId=new mongoose.Types.ObjectId(id)
+        const banner = await Banner.findByIdAndDelete(bannerId)
+        res.status(200).json({
+            status: "success",
+            message: "Banner deleted successfully"
+        })
+    }
+catch (err) {
+    next(err)
+}}
 
-module.exports = { crateBanner,getBnners}    
+
+const updateBanner = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        let bannerId=new mongoose.Types.ObjectId(id)
+        const banner = await Banner.findByIdAndUpdate(bannerId, req.body)
+        res.status(200).json({
+            status: "success",  
+            data: banner    
+        })
+    }
+    catch (err) {   
+        if(req.file){
+            deleteImage(req.body.image)
+        }
+        next(err)
+    }
+}
+module.exports = { crateBanner, getBnners ,deleteBanner, updateBanner}    
