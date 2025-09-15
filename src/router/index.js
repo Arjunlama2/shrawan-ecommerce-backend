@@ -3,6 +3,7 @@ const { path } = require('../app');
 const router = expres.Router();
 const userRouter = require('./user.router');
 const productRouter = require('./product.router');
+const bannerRouter = require('./banner.router');
 const routers = [
     {
         path: '/user',
@@ -17,6 +18,10 @@ const routers = [
     {
         path: '/product',
         route: productRouter
+    },
+      {
+        path: '/banner',
+        route: bannerRouter
     },
 ]
 
