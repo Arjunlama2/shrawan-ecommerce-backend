@@ -4,7 +4,7 @@ const deleteImage = require("../utils/deleteImage")
 
 const crateBanner = async (req, res,next) => {
     try {
-
+// validate the data
         const banner = await Banner.create(req.body)
         res.status(201).json({
             status: "success",
