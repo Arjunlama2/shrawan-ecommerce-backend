@@ -1,11 +1,10 @@
+const  path  = require("path");
 
 
 const checkFile=(req, res, next) => {
-    console.log(req.file);
-
+   
     if (req.file) {
-       
-      req.body.image = req.file.path.split("uploads\\")[1];
+      req.body.image = path.join('/uploads', req.file.filename);
         next()
     } else {
        next()

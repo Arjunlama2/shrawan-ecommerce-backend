@@ -21,23 +21,14 @@ const productSchema = new mongoose.Schema(
             type: Number,
             required: true
         },
-        discountedPrice: {
+        discountPrice: {
             type: Number
         },
         shortDescription: {
             type: String
         },
-        video: {
-            type: String
-        },
 
-        discountId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Discount"
-        },
-        individualDiscountPercentage: {
-            type: Number,
-        },
+       
         stock: { type: Number, default: 1 }
     },
 

@@ -1,34 +1,51 @@
 const Product = require("../model/Product")
 const joi = require("joi")
-const productSchema=joi.object({
-    category: joi.string().required(),
-    productOf: joi.string().required(),
-    title: joi.string().required(),
-    image: joi.string().required(),     
-})
+const deleteImage = require("../utils/deleteImage")
+const { default: mongoose } = require("mongoose")
+
+const getProducts = async (req, res, next) => {
+    try {
+        const products = await Product.find()
+        .populate("category")
+        .populate("productOf", "-password -role -__v -createdAt -updatedAt")
+        
+        res.status(200).json({
+            status: "success",
+            data: products
+        })
+    } catch (err) {
+        next(err)
+    }   
+}
+
+
+
 
 const createProduct = async (req, res, next) => {
     try {
-const { error, value } = productSchema.validate(req.body)
-
-        const product = await Product.create(value)
+        console.log(req.user);
+        const data = req.body
+        data.productOf=new mongoose.Types.ObjectId(req.user._id)
+        data.category=new mongoose.Types.ObjectId(req.body.category)
+    console.log(data);
+        const product = await Product.create(data)
         res.status(201).json({
             status: "success",
             data: product
         })
+
     } catch (err) {
         if (req.file) {
-            deleteImage(req.body.image)
+            deleteImage(req.file.path)
         }
         next(err)
-
-
     }
 }
 
 
 
 
-module.exports = {  
-    createProduct
+module.exports = {
+    createProduct,
+    getProducts
 }
